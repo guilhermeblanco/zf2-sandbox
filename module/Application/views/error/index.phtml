@@ -5,10 +5,10 @@
 
 <h3>Exception information:</h3>
 <p>
-    <b>Message:</b> <?php echo 'hi'/*$this->vars('exception')->getMessage()*/ ?>
+    <b>Message:</b> <?php echo $this->vars('exception')->getMessage() ?>
 </p>
 
 <h3>Stack trace:</h3>
-<pre><?php echo 'hi'/*$this->vars('exception')->getTraceAsString()*/ ?></pre>
+<pre><?php echo $this->vars('exception')->getTraceAsString() ?></pre>
 
 <?php endif ?>
