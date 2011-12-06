@@ -1,0 +1,18 @@
+<?php echo $this->plugin('doctype') ?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <?php echo $this->headTitle('ZF2 Sandbox Application') ?>
+</head>
+<body>
+<div id="header" style="background-color: #EEEEEE; height: 30px;">
+    <div id="header-logo" style="float: left">
+        <a href="<?php echo $this->url('home', array('controller' => 'index', 'action' => 'index')) ?>">
+            <b>ZF2 Sandbox Application</b></a>
+    </div>
+</div>
+
+<?php echo $this->raw('content') ?>
+
+</body>
+</html>
