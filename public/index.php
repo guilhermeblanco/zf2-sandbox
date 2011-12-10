@@ -1,31 +1,25 @@
 <?php
-
-define('APPLICATION_ROOT', dirname(__DIR__));
-
-require_once APPLICATION_ROOT . '/vendor/ZendFramework/library/Zend/Loader/AutoloaderFactory.php';
+chdir(dirname(__DIR__));
+require_once 'vendor/ZendFramework/library/Zend/Loader/AutoloaderFactory.php';
 
 Zend\Loader\AutoloaderFactory::factory(array('Zend\Loader\StandardAutoloader' => array()));
 
 $appConfig = array_merge_recursive(
-    include APPLICATION_ROOT . '/config/application.global.php',
-    include APPLICATION_ROOT . '/config/application.local.php'
+    include 'config/application.global.php',
+    include 'config/application.local.php'
 );
 
-$moduleLoader = new Zend\Loader\ModuleAutoloader($appConfig['module_paths']);
-$moduleLoader->register();
+$moduleManager    = new Zend\Module\Manager($appConfig['modules']);
+$listenerOptions  = new Zend\Module\Listener\ListenerOptions($appConfig['module_listener_options']);
+$defaultListeners = new Zend\Module\Listener\DefaultListenerAggregate($listenerOptions);
 
-$moduleManager = new Zend\Module\Manager($appConfig['modules']);
-$listenerOptions = new Zend\Module\Listener\ListenerOptions($appConfig['module_listener_options']);
+$defaultListeners->getConfigListener()->addConfigGlobPath('config/resource/*.{global,local}.php');
 
-$moduleManager->setDefaultListenerOptions($listenerOptions);
-$moduleManager->getConfigListener()->addConfigGlobPath(
-    dirname(__DIR__) . '/config/resource/*.{global,local}.php'
-);
-
+$moduleManager->events()->attachAggregate($defaultListeners);
 $moduleManager->loadModules();
 
 // Create application, bootstrap, and run
-$bootstrap   = new Zend\Mvc\Bootstrap($moduleManager->getMergedConfig());
+$bootstrap = new Zend\Mvc\Bootstrap($defaultListeners->getConfigListener()->getMergedConfig());
 $application = new Zend\Mvc\Application;
 
 $bootstrap->bootstrap($application);

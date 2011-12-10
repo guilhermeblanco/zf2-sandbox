@@ -57,7 +57,7 @@ class Module implements AutoloaderProvider
         $viewListener->setDisplayExceptionsFlag($config->display_exceptions);
 
         $this->viewListener = $viewListener;
-
+        
         return $viewListener;
     }
 
@@ -67,15 +67,19 @@ class Module implements AutoloaderProvider
             return $this->view;
         }
 
-        $di     = $app->getLocator();
-        $view   = $di->get('view');
-        $url    = $view->plugin('url');
+        $di   = $app->getLocator();
+        $view = $di->get('view');
+        $url  = $view->plugin('url');
+
         $url->setRouter($app->getRouter());
 
-        $view->plugin('headTitle')->setSeparator(' - ')
-                                  ->setAutoEscape(false)
-                                  ->append('Application');
+        $view->plugin('headTitle')
+             ->setSeparator(' - ')
+             ->setAutoEscape(false)
+             ->append('Application');
+
         $this->view = $view;
+
         return $view;
     }
 }

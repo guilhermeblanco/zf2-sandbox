@@ -12,8 +12,7 @@ class ErrorController extends ActionController
     public function indexAction()
     {
         $error = $this->request->getMetadata('error', false);
-
-        if ( ! $error) {
+        if (!$error) {
             $error = array(
                 'type'    => 404,
                 'message' => 'Page not found',

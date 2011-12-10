@@ -22,7 +22,7 @@ class Listener implements ListenerAggregate
 
     public function __construct(Renderer $renderer, $layout = 'layout.phtml')
     {
-        $this->view = $renderer;
+        $this->view   = $renderer;
         $this->layout = $layout;
     }
 
@@ -55,11 +55,11 @@ class Listener implements ListenerAggregate
 
     public function registerStaticListeners(StaticEventCollection $events, $locator)
     {
-        $ident = 'Application\Controller\PageController';
+        $ident   = 'Application\Controller\PageController';
         $handler = $events->attach($ident, 'dispatch', array($this, 'renderPageController'), -50);
         $this->staticListeners[] = array($ident, $handler);
 
-        $ident = 'Zend\Mvc\Controller\ActionController';
+        $ident   = 'Zend\Mvc\Controller\ActionController';
         $handler = $events->attach($ident, 'dispatch', array($this, 'renderView'), -50);
         $this->staticListeners[] = array($ident, $handler);
     }
@@ -97,10 +97,10 @@ class Listener implements ListenerAggregate
             $response->setStatusCode(404);
         }
 
-        $script = 'error/' . $page . '.phtml';
+        $script     = 'error/' . $page . '.phtml';
 
         // Action content
-        $content = $this->view->render($script);
+        $content    = $this->view->render($script);
         $e->setResult($content);
 
         return $this->renderLayout($e);
@@ -115,17 +115,17 @@ class Listener implements ListenerAggregate
 
         $routeMatch = $e->getRouteMatch();
         $controller = $routeMatch->getParam('controller', 'index');
-        $action = $routeMatch->getParam('action', 'index');
-        $script = $controller . '/' . $action . '.phtml';
+        $action     = $routeMatch->getParam('action', 'index');
+        $script     = $controller . '/' . $action . '.phtml';
 
-        $vars = $e->getResult();
+        $vars       = $e->getResult();
         if (is_scalar($vars)) {
             $vars = array('content' => $vars);
         } elseif (is_object($vars) && !$vars instanceof ArrayAccess) {
             $vars = (array) $vars;
         }
 
-        $content = $this->view->render($script, $vars);
+        $content    = $this->view->render($script, $vars);
 
         $e->setResult($content);
         return $content;
@@ -142,8 +142,8 @@ class Listener implements ListenerAggregate
             return $response;
         }
 
-        $footer = $e->getParam('footer', false);
-        $vars = array('footer' => $footer);
+        $footer   = $e->getParam('footer', false);
+        $vars     = array('footer' => $footer);
 
         if (false !== ($contentParam = $e->getParam('content', false))) {
             $vars['content'] = $contentParam;
@@ -151,7 +151,7 @@ class Listener implements ListenerAggregate
             $vars['content'] = $e->getResult();
         }
 
-        $layout = $this->view->render($this->layout, $vars);
+        $layout   = $this->view->render($this->layout, $vars);
         $response->setContent($layout);
         return $response;
     }
@@ -170,8 +170,8 @@ class Listener implements ListenerAggregate
         }
 
         $vars = array(
-            'message' => 'Page not found.',
-            'exception' => $e->getParam('exception'),
+            'message'            => 'Page not found.',
+            'exception'          => $e->getParam('exception'),
             'display_exceptions' => $this->displayExceptions(),
         );
 
@@ -184,8 +184,8 @@ class Listener implements ListenerAggregate
 
     public function renderError(MvcEvent $e)
     {
-        $error = $e->getError();
-        $app = $e->getTarget();
+        $error    = $e->getError();
+        $app      = $e->getTarget();
         $response = $e->getResponse();
         if (!$response) {
             $response = new Response();
@@ -196,8 +196,8 @@ class Listener implements ListenerAggregate
             case Application::ERROR_CONTROLLER_NOT_FOUND:
             case Application::ERROR_CONTROLLER_INVALID:
                 $vars = array(
-                    'message' => 'Page not found.',
-                    'exception' => $e->getParam('exception'),
+                    'message'            => 'Page not found.',
+                    'exception'          => $e->getParam('exception'),
                     'display_exceptions' => $this->displayExceptions(),
                 );
                 $response->setStatusCode(404);
@@ -207,8 +207,8 @@ class Listener implements ListenerAggregate
             default:
                 $exception = $e->getParam('exception');
                 $vars = array(
-                    'message' => 'An error occurred during execution; please try again later.',
-                    'exception' => $e->getParam('exception'),
+                    'message'            => 'An error occurred during execution; please try again later.',
+                    'exception'          => $e->getParam('exception'),
                     'display_exceptions' => $this->displayExceptions(),
                 );
                 $response->setStatusCode(500);
